@@ -70,7 +70,6 @@ binary_sensor:
 
 ## Notes
  - The alarm loop bit will vary depending on sensor type and installation.  To handle this without requiring manual configuration HoneywellSecurityMQTT will need to receive at least one non-triggered packet from each sensor.  This can be accomplished by letting it run for at least ~90 minutes to allow pulse checks to arrive from each sensor.  This does mean that if the first packet received is due to an event (e.g. open door), it will not be detected.  Subsequent detections will work, however.  A future improvement is to save the learned devices and their behavior so that future executions of the program will not require this learning period.
- - HoneywellSecurityMQTT attempts to use MQTT wills to indicate a failure if the program dies unexpectedly, but this doesn't seem to work.  I may be misunderstanding how this is supposed to behave, or perhaps it is some issue with HA's embedded MQTT broker.  If anyone has any ideas here, I'm all ears.
 
 ## Future Work
  - Cache learned sensor data
