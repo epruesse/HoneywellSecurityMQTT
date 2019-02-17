@@ -26,13 +26,13 @@ On a Debian-based system, something like this should work:
   sudo apt-get install build-essential librtlsdr-dev rtl-sdr libmosquittopp-dev
 ```
 
-To avoid having to run as root, you can add the following rule to a file in `/etc/udev/rules.d`:
+To get the device permissions set correctly, run:
+
 ```
-  SUBSYSTEMS=="usb", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="2838", MODE:="0660", GROUP:="audio"
+  sudo udevadm control --reload-rules && sudo udevadm trigger
 ```
 
-Then add the desired user to the `audio` group.
-If you plugged in the RTL-SDR before installing rtl-sdr, you probably will need to do something like `sudo rmmod rtl2832 dvb_usb_rtl28xxu` then remove and reinstall the adapter.
+The device should now be accessible to members of the `plugdev` group. You can override this by adding a file `/etc/udev/rules.d/rtlsdr.rules`. Look at `/lib/udev/rules.d/60-librtlsdr0.rules` for the format.
 
 ### Configuration
 Modify `mqtt_config.h` to specify the host, port, username, and password of your MQTT broker.  If `""` is used for the username or password, then an anonymous login is attempted.  Also, the payloads of some signals can be configured.
@@ -74,3 +74,4 @@ These environment variables will override the values set in `mqtt_config.h`
 | security/sensors345/keypad/`<txid>`/keyphrase/<LEN> | Numbers (or `#` or `*` entered within 2 seconds of each other.  Regex: `[*#0-9]{2,}` | No |
 | security/sensors345/keyfob/`<txid>`/keypress        | `STAY`, `AWAY`, `DISARM`, `AUX` | No |
 
+On the console, payloads marked with an asterisk (`OK*`) indicate background updates sent without change to the sensors status (supervised bit).
